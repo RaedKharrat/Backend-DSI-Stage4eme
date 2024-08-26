@@ -1,4 +1,5 @@
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
+import Classe from './classe.js'; // Importation correcte du modèle Classe
 
 const moduleSchema = new Schema(
     {
@@ -7,39 +8,38 @@ const moduleSchema = new Schema(
             required: true
         },
         classe: {
-            type: classe,
+            type: Schema.Types.ObjectId,
+            ref: 'Classe',
             required: true
         },
         nbrHeure: {
             type: Number,
             required: true
         },
-        semestre:{
+        semestre: {
             type: Number,
-            required: true,
+            required: true
         },
-        chargeep:{
+        chargeep: {
             type: Number,
-            required: true,
+            required: true
         },
-        cc:{
-            type:Float32Array,
-            required: true,
-
+        cc: {
+            type: Number,
+            required: true
         },
-        examen:{
-            type:Float32Array,
-            required: true,
-
+        examen: {
+            type: Number,
+            required: true
         },
-        tp:{
-            type:Float32Array,
-            required: true,
-
+        tp: {
+            type: Number,
+            required: true
         }
     },
     {
         timestamps: true
     }
-)
-export default model("Module",moduleSchema);
+);
+
+export default model('Module', moduleSchema);
