@@ -1,8 +1,11 @@
+// server.js
+
 import express from 'express';
 import mongoose from 'mongoose';
 import authRoutes from './routes/auth.js';
-import absenceRoutes from './routes/absenceRoutes.js'; // Import the absence routes
+import absenceRoutes from './routes/absenceRoutes.js';
 import cahierClasseRoutes from './routes/cahierClasseRoutes.js';
+import chargeHoraireRoutes from './routes/chargeHoraireRoutes.js'; // Import des routes mises à jour
 import { authenticateJWT } from './middelwares/authMiddleware.js';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -37,8 +40,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
 
 // Routes protégées
-app.use('/api/absences', authenticateJWT, absenceRoutes); // Use absence routes
+app.use('/api/absences', authenticateJWT, absenceRoutes);
 app.use('/api/cahierClasse', authenticateJWT, cahierClasseRoutes);
+app.use('/api/chargeHoraire', authenticateJWT, chargeHoraireRoutes); // Utilisation des routes mises à jour
 
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}`);

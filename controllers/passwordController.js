@@ -4,78 +4,43 @@ import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import 'dotenv/config';
 
-// Configure Nodemailer
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT, 10),
-    secure: process.env.SMTP_PORT === '465', // true for 465, false for other ports
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT, 10),
+  secure: process.env.SMTP_PORT === '465',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
 });
 
 export const forgotPassword = async (req, res) => {
-    const { email } = req.body;
-
-    try {
-        // Find user by email
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Generate a secret code and expiration date
-        const secretCode = Math.floor(10000 + Math.random() * 90000).toString();
-        const expirationDate = new Date(Date.now() + 3600000); // 1 hour from now
-
-        // Save the secret code to the database
-        const newSecretCode = new SecretCode({ code: secretCode, expirationDate });
-        await newSecretCode.save();
-
-        // Prepare the email options
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: user.email,
-            subject: 'Verification Code',
-            text: `The verification code is ${secretCode}`
-        };
-
-        // Send the email
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error('Error sending email:', error);
-                return res.status(500).json({ message: 'Error sending email', error: error.message });
-            }
-            res.status(200).json({ message: 'Secret code sent to your email' });
-        });
-    } catch (err) {
-        res.status(500).json({ message: 'Error processing request', error: err.message });
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
     }
-};
 
-export const resetPassword = async (req, res) => {
-    const { email, secretCode, newPassword } = req.body;
+    const code = Math.random().toString(36).substr(2, 8);
+    const expirationDate = new Date(Date.now() + 3600000); // 1 hour
 
-    try {
-        const codeEntry = await SecretCode.findOne({ code: secretCode, expirationDate: { $gt: new Date() } });
-        if (!codeEntry) {
-            return res.status(400).json({ message: 'Invalid or expired code' });
-        }
+    const secretCode = new SecretCode({
+      code,
+      expirationDate
+    });
 
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+    await secretCode.save();
 
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        user.password = hashedPassword;
-        await user.save();
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Password Reset Code',
+      text: `Your password reset code is: ${code}`
+    });
 
-        await SecretCode.deleteOne({ _id: codeEntry._id });
-
-        res.status(200).json({ message: 'Password reset successfully' });
-    } catch (err) {
-        res.status(500).json({ message: 'Error resetting password', error: err.message });
-    }
+    res.status(200).json({ message: 'Reset code sent to email' });
+  } catch (err) {
+    res.status(500).json({ message: 'Error sending reset code', error: err.message });
+  }
 };

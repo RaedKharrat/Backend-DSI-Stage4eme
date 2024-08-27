@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose';
-import Classe from './classe.js'; // Importation correcte du modèle Classe
 
 const moduleSchema = new Schema(
     {
@@ -7,33 +6,8 @@ const moduleSchema = new Schema(
             type: String,
             required: true
         },
-        classe: {
-            type: Schema.Types.ObjectId,
-            ref: 'Classe',
-            required: true
-        },
-        nbrHeure: {
-            type: Number,
-            required: true
-        },
-        semestre: {
-            type: Number,
-            required: true
-        },
-        chargeep: {
-            type: Number,
-            required: true
-        },
-        cc: {
-            type: Number,
-            required: true
-        },
-        examen: {
-            type: Number,
-            required: true
-        },
-        tp: {
-            type: Number,
+        up: {
+            type: String,
             required: true
         }
     },

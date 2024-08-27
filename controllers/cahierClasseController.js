@@ -4,7 +4,8 @@ import Module from '../models/module.js'; // Assure-toi d'importer le modèle Mo
 export const createCahierClasse = async (req, res) => {
     const { date, contenu, horaire_seance, titre_seance, remarque, module } = req.body;
     try {
-        // Vérifie si le module existe
+
+//verif l'exis de cahier de classe
         const moduleExists = await Module.findById(module);
         if (!moduleExists) {
             return res.status(400).json({ message: 'Module not found' });
@@ -36,7 +37,7 @@ export const updateCahierClasse = async (req, res) => {
             return res.status(404).json({ message: 'CahierClasse not found' });
         }
 
-        // Vérifie si le module existe
+        // Vérif l'existance de module
         if (module) {
             const moduleExists = await Module.findById(module);
             if (!moduleExists) {
