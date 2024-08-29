@@ -1,13 +1,17 @@
+// routes/absenceRoutes.js
 import express from 'express';
-import { createAbsence, getAbsences } from '../controllers/absenceController.js';
+import { createAbsence, getAbsences, getEtudiantsByClasse } from '../controllers/absenceController.js';
 import { authenticateJWT, verifyEnseignant } from '../middelwares/authMiddleware.js';
 
 const router = express.Router();
 
 // Route to add a new absence
-router.post('/absences', authenticateJWT, verifyEnseignant, createAbsence);
+router.post('/', authenticateJWT, verifyEnseignant, createAbsence);
 
 // Route to get all absences (optional)
-router.get('/absences', authenticateJWT, verifyEnseignant, getAbsences);
+router.get('/', authenticateJWT, verifyEnseignant, getAbsences);
+
+// Route to get students by class
+router.get('/etudiants/:classeId', authenticateJWT, verifyEnseignant, getEtudiantsByClasse);
 
 export default router;

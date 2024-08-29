@@ -1,3 +1,4 @@
+// models/absence.js
 import { Schema, model } from 'mongoose';
 import Etudiant from './etudiant.js';
 import Classe from './classe.js';
@@ -6,7 +7,7 @@ import Module from './module.js';
 const absenceSchema = new Schema({
   observation: {
     type: String,
-    required: true
+    required: false // La remarque est optionnelle
   },
   date: {
     type: Date,
