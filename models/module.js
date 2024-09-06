@@ -9,6 +9,10 @@ const moduleSchema = new Schema(
         up: {
             type: String,
             required: true
+        },
+        code_module:{
+            type: String,
+            required:true
         }
     },
     {
