@@ -1,10 +1,12 @@
 import express from 'express';
-import { register, login, registerValidation, loginValidation } from '../controllers/authController.js';
+import { register, login, resetPasswordRequest, resetPassword, logout } from '../controllers/authController.js';
 
 const router = express.Router();
 
-// Routes d'inscription et de connexion avec validation
-router.post('/register', registerValidation, register);
-router.post('/login', loginValidation, login);
+router.post('/register', register);
+router.post('/login', login);
+router.post('/reset-password-request', resetPasswordRequest);
+router.post('/reset-password', resetPassword);
+router.post('/logout', logout); // Route pour la déconnexion
 
 export default router;

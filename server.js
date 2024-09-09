@@ -8,7 +8,7 @@ import absenceRoutes from './routes/absenceRoutes.js';
 import cahierClasseRoutes from './routes/cahierClasseRoutes.js';
 import chargeHoraireRoutes from './routes/chargeHoraireRoutes.js';
 import reclamationRoutes from './routes/reclamationRoutes.js';  // Import des routes des réclamations
-import { authenticateJWT } from './middelwares/authMiddleware.js';  // Correction du nom du dossier
+import { authenticateJWT } from './middelwares/authMiddleware.js';
 
 dotenv.config();
 
@@ -26,7 +26,7 @@ mongoose
     console.log(`Connected to ${dataBaseName}`);
   })
   .catch(err => {
-    console.log(err);
+    console.log('Error connecting to database:', err);
   });
 
 // Middleware
